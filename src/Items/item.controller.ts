@@ -7,17 +7,20 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
-import { CreateDto } from './crate-item.dto';
-import { get } from 'https';
+import { CreateDto } from './dto/crate-item.dto';
+import { ItemService } from './item.service';
+import { Item } from './interfaces/item.interface';
+
 @Controller('items')
 export class ItemConoroller {
+  constructor(private readonly itemService: ItemService) {}
   @Get('All')
-  findAll(): string {
-    return 'Get all item';
+  findAll(): Item[] {
+    return this.itemService.findAll();
   }
   @Get('single/:id')
-  findOne(@Param('id') id): string {
-    return `item ${id}`;
+  findOne(@Param('id') id): Item {
+    return this.itemService.findOne(id);
   }
   @Post('add')
   create(@Body() createDto: CreateDto): string {
@@ -25,8 +28,8 @@ export class ItemConoroller {
   }
 
   @Delete('Delete/:id')
-  delete(@Param('id') id): string {
-    return `delete id is ${id}`;
+  delete(@Param('id') id): Item {
+    return this.itemService.delete(id);
   }
 
   @Put('update/:id')
